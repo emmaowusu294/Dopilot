@@ -1,30 +1,29 @@
+import { createHomeStyles } from "@/assets/styles/home.styles";
 import { useTheme } from "@/hooks/useTheme";
-
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const { toggleDarkMode } = useTheme();
+  const { toggleDarkMode, colors } = useTheme();
 
+  const homeStyles = createHomeStyles(colors);
   return (
-    <View style={styles.container}>
-      <Text>This is the Todo Screen</Text>
-      <TouchableOpacity
-        style={{ backgroundColor: "red", padding: 10, borderRadius: 10 }}
-        onPress={() => {
-          toggleDarkMode();
-        }}
-      >
-        <Text style={{ color: "white" }}>Toggle Mode</Text>
-      </TouchableOpacity>
-    </View>
+    <LinearGradient
+      colors={colors.gradients.background}
+      style={homeStyles.container}
+    >
+      <StatusBar barStyle={colors.statusBarStyle} />
+      <SafeAreaView style={homeStyles.safeArea}>
+        <Text>This is the Todo Screen</Text>
+        <TouchableOpacity
+          onPress={() => {
+            toggleDarkMode();
+          }}
+        >
+          <Text>Toggle Mode</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 55,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
