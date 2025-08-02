@@ -1,17 +1,26 @@
 {
+  // Base config provided by Expo
   "extends": "expo/tsconfig.base",
+
+  // Compiler behavior customization
   "compilerOptions": {
+    // Enable strict type-checking for safer code
     "strict": true,
+
+    // Define custom path aliases
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
+
+    // Optional: Use baseUrl if needed for path resolution
+    // "baseUrl": "."
   },
+
+  // Files to include in the project
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "**/*.ts", // All TypeScript files
+    "**/*.tsx", // All TSX (React) files
+    ".expo/types/**/*.ts", // Expo auto-generated type definitions
+    "expo-env.d.ts" // Custom environment definitions (if any)
   ]
 }
