@@ -6,7 +6,7 @@ import { useMutation } from "convex/react";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
+import Toast from "react-native-toast-message"; //for toast messages
 
 const TodoInput = () => {
   const { colors } = useTheme();
@@ -16,7 +16,6 @@ const TodoInput = () => {
   const addTodo = useMutation(api.todos.addTodo);
 
   const handleAddTodo = async () => {
-    // console.log("todo", newTodo.trim());
     if (newTodo.trim()) {
       try {
         await addTodo({ text: newTodo.trim() });
@@ -24,7 +23,7 @@ const TodoInput = () => {
       } catch (error) {
         Toast.show({
           type: "error",
-          text1: "Error adding todo",
+          text1: "Error adding Todo",
           text2: `${error}`,
         });
       }
