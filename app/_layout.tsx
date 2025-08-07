@@ -15,7 +15,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
         </Stack>
 
-        {/* 👇 Toast goes here so it's always accessible */}
+        {/* 👇 Toast goes here so it's always accessible anywhere in the app */}
         <Toast />
       </ThemeProvider>
     </ConvexProvider>
