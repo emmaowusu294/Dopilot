@@ -1,3 +1,4 @@
+//PREFERENCES
 import { createSettingsStyles } from "@/assets/styles/settings.styles";
 import { useTheme } from "@/hooks/useTheme";
 import { Ionicons } from "@expo/vector-icons";

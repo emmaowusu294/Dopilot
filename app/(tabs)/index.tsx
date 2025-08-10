@@ -1,3 +1,4 @@
+//HOME
 import { createHomeStyles } from "@/assets/styles/home.styles";
 import EmptyState from "@/components/EmptyState";
 import Header from "@/components/Header";

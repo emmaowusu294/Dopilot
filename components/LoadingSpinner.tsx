@@ -1,3 +1,4 @@
+//LOADING SPINNER
 import { createHomeStyles } from "@/assets/styles/home.styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator, Text, View } from "react-native";

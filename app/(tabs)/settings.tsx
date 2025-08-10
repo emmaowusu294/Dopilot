@@ -1,3 +1,4 @@
+//SETTINGS
 import { createSettingsStyles } from "@/assets/styles/settings.styles";
 import DangerZone from "@/components/DangerZone";
 import Preferences from "@/components/Preferences";
@@ -11,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const SettingsScreen = () => {
   const { colors, toggleDarkMode, isDarkMode } = useTheme();
+
   const settingsStyles = createSettingsStyles(colors);
   return (
     <LinearGradient

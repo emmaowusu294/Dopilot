@@ -1,3 +1,4 @@
+//PROGRESS STATS
 import { createSettingsStyles } from "@/assets/styles/settings.styles";
 import { api } from "@/convex/_generated/api";
 import { useTheme } from "@/hooks/useTheme";

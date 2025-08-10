@@ -1,5 +1,5 @@
 {
-  // Base config provided by Expo
+  // Base config provided by Expo framework
   "extends": "expo/tsconfig.base",
 
   // Compiler behavior customization

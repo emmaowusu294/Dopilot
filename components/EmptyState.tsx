@@ -1,3 +1,4 @@
+//EMPTY STATE
 import { createHomeStyles } from "@/assets/styles/home.styles";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
