@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { Keyboard, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message"; //for toast messages
 
 const TodoInput = () => {
@@ -26,6 +26,8 @@ const TodoInput = () => {
           text1: "Error adding Todo",
           text2: `${error}`,
         });
+      } finally {
+        Keyboard.dismiss();
       }
     }
   };

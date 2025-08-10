@@ -25,7 +25,7 @@ import Toast from "react-native-toast-message";
 type Todo = Doc<"todos">;
 
 export default function Index() {
-  const { toggleDarkMode, colors } = useTheme();
+  const { colors } = useTheme();
   const [editingID, setEditingID] = useState<Id<"todos"> | null>(null);
   const [editText, setEditText] = useState("");
 
@@ -37,6 +37,12 @@ export default function Index() {
 
   const isLoading = todos === undefined;
   if (isLoading) return <LoadingSpinner />;
+
+  // ✅ Sort so upcoming first (not completed), then completed
+  const sortedTodos = [...todos].sort((a, b) => {
+    if (a.isCompleted === b.isCompleted) return 0;
+    return a.isCompleted ? 1 : -1;
+  });
 
   const handleToggleTodo = async (id: Id<"todos">) => {
     try {
@@ -213,28 +219,13 @@ export default function Index() {
         <TodoInput />
 
         <FlatList
-          data={[...todos]}
+          data={[...sortedTodos]}
           keyExtractor={(item) => item._id}
           renderItem={renderTodoItem}
           style={homeStyles.todoList}
           contentContainerStyle={homeStyles.todoListContent}
           ListEmptyComponent={<EmptyState />}
         />
-
-        <TouchableOpacity
-          style={{
-            marginTop: 20,
-            backgroundColor: "red",
-            alignItems: "center",
-            justifyContent: "center",
-            height: 40,
-          }}
-          onPress={() => {
-            toggleDarkMode();
-          }}
-        >
-          <Text>Toggle Mode</Text>
-        </TouchableOpacity>
       </SafeAreaView>
     </LinearGradient>
   );
