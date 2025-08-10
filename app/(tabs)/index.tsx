@@ -9,11 +9,13 @@ import { useTheme } from "@/hooks/useTheme";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "convex/react";
 import { LinearGradient } from "expo-linear-gradient";
+import { useState } from "react";
 import {
   Alert,
   FlatList,
   StatusBar,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -24,11 +26,14 @@ type Todo = Doc<"todos">;
 
 export default function Index() {
   const { toggleDarkMode, colors } = useTheme();
+  const [editingID, setEditingID] = useState<Id<"todos"> | null>(null);
+  const [editText, setEditText] = useState("");
 
   const homeStyles = createHomeStyles(colors);
   const todos = useQuery(api.todos.getTodos);
   const toggleTodo = useMutation(api.todos.toggleTodo);
   const deleteTodo = useMutation(api.todos.deleteTodo);
+  const updateTodo = useMutation(api.todos.updateTodo);
 
   const isLoading = todos === undefined;
   if (isLoading) return <LoadingSpinner />;
@@ -60,7 +65,34 @@ export default function Index() {
     ]);
   };
 
+  const handleEditTodo = (todo: Todo) => {
+    setEditText(todo.text);
+    setEditingID(todo._id);
+  };
+
+  const handleSaveEdit = async () => {
+    if (editingID) {
+      try {
+        await updateTodo({ id: editingID, text: editText.trim() });
+        setEditingID(null);
+        setEditText("");
+      } catch (error) {
+        Toast.show({
+          type: "error",
+          text1: "Error updating todo",
+          text2: `${error}`,
+        });
+      }
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditText("");
+    setEditingID(null);
+  };
+
   const renderTodoItem = ({ item }: { item: Todo }) => {
+    const isEditing = editingID === item._id;
     return (
       <View style={homeStyles.todoItemWrapper}>
         <LinearGradient
@@ -92,41 +124,80 @@ export default function Index() {
               )}
             </LinearGradient>
           </TouchableOpacity>
-          <View style={homeStyles.todoTextContainer}>
-            <Text
-              style={[
-                homeStyles.todoText,
-                item.isCompleted && {
-                  textDecorationLine: "line-through",
-                  color: colors.textMuted,
-                  opacity: 0.6,
-                },
-              ]}
-            >
-              <Text style={homeStyles.todoText}>{item.text}</Text>
-            </Text>
-            <View style={homeStyles.todoActions}>
-              <TouchableOpacity onPress={() => {}} activeOpacity={0.8}>
-                <LinearGradient
-                  colors={colors.gradients.warning}
-                  style={homeStyles.actionButton}
+          {isEditing ? (
+            <View style={homeStyles.editContainer}>
+              <TextInput
+                style={homeStyles.editInput}
+                value={editText}
+                onChangeText={setEditText}
+                placeholder="Edit your todo..."
+                multiline
+                placeholderTextColor={colors.textMuted}
+              />
+              <View style={homeStyles.editButtons}>
+                <TouchableOpacity onPress={handleSaveEdit} activeOpacity={0.8}>
+                  <LinearGradient
+                    colors={colors.gradients.success}
+                    style={homeStyles.editButton}
+                  >
+                    <Ionicons name="checkmark" size={16} color="#fff" />
+                  </LinearGradient>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleCancelEdit}
+                  activeOpacity={0.8}
                 >
-                  <Ionicons name="pencil" size={14} color="#fff" />
-                </LinearGradient>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleDeleteTodo(item._id)}
-                activeOpacity={0.8}
-              >
-                <LinearGradient
-                  colors={colors.gradients.danger}
-                  style={homeStyles.actionButton}
-                >
-                  <Ionicons name="trash" size={14} color="#fff" />
-                </LinearGradient>
-              </TouchableOpacity>
+                  <LinearGradient
+                    colors={colors.gradients.danger}
+                    style={homeStyles.editButton}
+                  >
+                    <Ionicons name="close" size={16} color="#fff" />
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          ) : (
+            <View style={homeStyles.todoTextContainer}>
+              <Text
+                style={[
+                  homeStyles.todoText,
+                  item.isCompleted && {
+                    textDecorationLine: "line-through",
+                    color: colors.textMuted,
+                    opacity: 0.6,
+                  },
+                ]}
+              >
+                <Text style={homeStyles.todoText}>{item.text}</Text>
+              </Text>
+              <View style={homeStyles.todoActions}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleEditTodo(item);
+                  }}
+                  activeOpacity={0.8}
+                >
+                  <LinearGradient
+                    colors={colors.gradients.warning}
+                    style={homeStyles.actionButton}
+                  >
+                    <Ionicons name="pencil" size={14} color="#fff" />
+                  </LinearGradient>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleDeleteTodo(item._id)}
+                  activeOpacity={0.8}
+                >
+                  <LinearGradient
+                    colors={colors.gradients.danger}
+                    style={homeStyles.actionButton}
+                  >
+                    <Ionicons name="trash" size={14} color="#fff" />
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </LinearGradient>
       </View>
     );
