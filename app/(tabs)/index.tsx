@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "convex/react";
 import { LinearGradient } from "expo-linear-gradient";
 import {
+  Alert,
   FlatList,
   StatusBar,
   Text,
@@ -27,6 +28,7 @@ export default function Index() {
   const homeStyles = createHomeStyles(colors);
   const todos = useQuery(api.todos.getTodos);
   const toggleTodo = useMutation(api.todos.toggleTodo);
+  const deleteTodo = useMutation(api.todos.deleteTodo);
 
   const isLoading = todos === undefined;
   if (isLoading) return <LoadingSpinner />;
@@ -41,6 +43,21 @@ export default function Index() {
         text2: `${error}`,
       });
     }
+  };
+
+  const handleDeleteTodo = async (id: Id<"todos">) => {
+    Alert.alert("Delete todo", "Are you sure you want to delete this todo?", [
+      {
+        text: "Cancel",
+        onPress: () => {},
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => deleteTodo({ id }),
+        style: "destructive",
+      },
+    ]);
   };
 
   const renderTodoItem = ({ item }: { item: Todo }) => {
@@ -97,7 +114,10 @@ export default function Index() {
                   <Ionicons name="pencil" size={14} color="#fff" />
                 </LinearGradient>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}} activeOpacity={0.8}>
+              <TouchableOpacity
+                onPress={() => handleDeleteTodo(item._id)}
+                activeOpacity={0.8}
+              >
                 <LinearGradient
                   colors={colors.gradients.danger}
                   style={homeStyles.actionButton}
